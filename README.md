@@ -231,6 +231,38 @@ The system returns:
 
 ---
 
+## How to Run
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/medical-auto-triage.git
+cd medical-auto-triage
+```
+
+2. Install dependencies:
+pip install torch transformers scikit-learn pandas numpy gradio
+
+3. Run the application:
+python app.py
+
+---
+
+## Example Inputs
+
+You can test the system using the following sample symptom descriptions.
+
+### Example 1: Cardiology Case
+
+Cardiology consultation note: patient with acute coronary syndrome. ECG shows ST elevation. Troponin markedly elevated. Cardiac catheterization recommended.
+Expected: Cardiovascular / Pulmonary
+
+### Example 2: Orthopedic Case
+
+Patient fell and sustained a comminuted fracture of the left tibia and fibula. Orthopedic consultation requested. Patient placed in splint and non weight bearing.
+Expected: Orthopedic
+
+---
+
 ## Future Improvements
 
 - Expand training data using multiple medical datasets
