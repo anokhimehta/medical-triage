@@ -112,6 +112,74 @@ This hybrid approach leverages the strengths of both traditional and deep NLP mo
 
 ---
 
+## User Interface (UI)
+
+### Interactive Intake Interface
+
+The system includes an **interactive web-based patient intake form** built using **Gradio**, enabling easy deployment and real-time interaction. The interface is designed to simulate a realistic clinical intake workflow while remaining accessible for demos and testing.
+
+---
+
+### UI Inputs
+
+The intake form collects both structured and unstructured patient information:
+
+- Patient name and age  
+- Body temperature  
+- Self-reported pain level (scale-based)  
+- Medical history (checkbox selections)  
+- Past surgeries  
+- Current medications  
+- Free-text symptom description  
+- Safety screening questions  
+
+These inputs are used for both **machine learning inference** and **rule-based safety screening**.
+
+---
+
+### UI Outputs
+
+After submission, the system displays:
+
+- **Priority alert** (if applicable)  
+- **Recommended medical department**  
+- **Confidence score** for the prediction  
+- **Automated intake summary** for clinical review  
+
+Priority alerts are displayed **before** the machine learning recommendation to ensure urgent cases are surfaced immediately.
+
+---
+
+## Rule-Based Safety & Priority Screening
+
+In addition to ML-based classification, the system implements **rule-based safety checks** to identify patients who may require immediate medical attention. These checks act as a first-line safeguard and override standard ML routing when triggered.
+
+---
+
+### Immediate Priority Flags (Level 1)
+
+An **Immediate Priority Alert** is triggered if **any** of the following conditions are met:
+
+- Life-threatening symptoms (e.g., excessive bleeding)
+- Body temperature ≥ **104°F**
+- Pain level ≥ **9**
+
+These cases are flagged for **immediate medical evaluation**.
+
+---
+
+### Urgent Priority Flags (Level 2)
+
+An **Urgent Priority Alert** is triggered for concerning but less immediately life-threatening symptoms, including:
+
+- Chest pain
+- Neurological symptoms
+- Severe or worsening pain
+
+Level 2 cases are recommended for **expedited clinical review**.
+
+---
+
 ## Understanding the Output
 
 ### Department Recommendation
@@ -178,3 +246,18 @@ The system returns:
 ## Disclaimer
 
 This project is a **research and educational prototype** and is **not intended for clinical use**. Predictions should not replace professional medical judgment.
+
+
+
+## Contributors
+
+- Anokhi Mehta
+- Akshayalakshmi Padmanathan
+- Lava Ghimire
+
+---
+
+<p align="center">
+  <i>Built with ❤️ for better healthcare</i>
+</p>
+
