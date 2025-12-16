@@ -240,10 +240,14 @@ cd medical-auto-triage
 ```
 
 2. Install dependencies:
+```bash
 pip install torch transformers scikit-learn pandas numpy gradio
+```
 
 3. Run the application:
+```bash
 python app.py
+```
 
 ---
 
