@@ -256,13 +256,15 @@ python app.py
 You can test the system using the following sample symptom descriptions.
 
 ### Example 1: Cardiology Case
-
+```bash
 Cardiology consultation note: patient with acute coronary syndrome. ECG shows ST elevation. Troponin markedly elevated. Cardiac catheterization recommended.
+```
 Expected: Cardiovascular / Pulmonary
 
 ### Example 2: Orthopedic Case
-
+```bash
 Patient fell and sustained a comminuted fracture of the left tibia and fibula. Orthopedic consultation requested. Patient placed in splint and non weight bearing.
+```
 Expected: Orthopedic
 
 ---
