@@ -4,22 +4,41 @@
 #   python app.py
 
 import gradio as gr
-import random
-import os
 import pickle
+import torch
+import numpy as np
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from scipy.special import softmax
 
 # -------------------------
 # Model Loading (Optional)
 # -------------------------
 
-MODEL_AVAILABLE = os.path.exists("specialty_classifier.pkl")
+# MODEL_AVAILABLE = os.path.exists("specialty_classifier.pkl")
+# BERT_AVAILABLE = os.path.exists("./bert_model")
 
-if MODEL_AVAILABLE:
-    with open("specialty_classifier.pkl", "rb") as f:
-        data = pickle.load(f)
-        model = data["model"]
-        vectorizer = data["vectorizer"]
+# if MODEL_AVAILABLE:
+#     with open("specialty_classifier.pkl", "rb") as f:
+#         data = pickle.load(f)
+#         model = data["model"]
+#         vectorizer = data["vectorizer"]
 
+# Load Logistic Regression side
+
+MODEL_AVAILABLE = True
+
+# Load Logistic Regression + TF-IDF
+with open("logreg.pkl", "rb") as f:
+    logreg_bundle = pickle.load(f)
+
+logreg_model = logreg_bundle["model"]
+vectorizer = logreg_bundle["vectorizer"]
+label_encoder = logreg_bundle["label_encoder"]
+
+# Load BERT
+tokenizer = AutoTokenizer.from_pretrained("./bert_model")
+bert_model = AutoModelForSequenceClassification.from_pretrained("./bert_model")
+bert_model.eval()
 
 def predict_specialty(text):
     """
@@ -33,29 +52,32 @@ def predict_specialty(text):
     if not text or len(text.strip()) < 10:
         return {"specialty": "Unknown", "confidence": 0.0}
 
-    # -------------------------
-    # Fallback (No Model Yet)
-    # -------------------------
-    if not MODEL_AVAILABLE:
-        specialty, confidence = random.choice([
-            ("General Medicine", 0.72),
-            ("Cardiology", 0.81),
-            ("Neurology", 0.67),
-            ("Orthopedics", 0.62),
-        ])
-        return {"specialty": specialty, "confidence": confidence}
+    # ---------- Logistic Regression ----------
+    X_tfidf = vectorizer.transform([text])
+    logreg_probs = logreg_model.predict_proba(X_tfidf)
 
-    # -------------------------
-    # Real Model Inference
-    # -------------------------
-    X = vectorizer.transform([text])
-    probs = model.predict_proba(X)[0]
-    idx = probs.argmax()
+    # ---------- BERT ----------
+    encodings = tokenizer(
+        [text],
+        truncation=True,
+        padding=True,
+        max_length=512,
+        return_tensors="pt"
+    )
+
+    with torch.no_grad():
+        outputs = bert_model(**encodings)
+        bert_probs = softmax(outputs.logits.numpy(), axis=1)
+
+    # ---------- Ensemble ----------
+    ensemble_probs = (bert_probs + logreg_probs) / 2
+    idx = ensemble_probs.argmax(axis=1)[0]
 
     return {
-        "specialty": model.classes_[idx],
-        "confidence": probs[idx]
+        "specialty": label_encoder.inverse_transform([idx])[0],
+        "confidence": float(ensemble_probs[0, idx])
     }
+
 
 
 # -------------------------
@@ -236,4 +258,4 @@ with gr.Blocks(title="Patient Intake & Auto-Triage") as demo:
         outputs=output
     )
 
-demo.launch()
+demo.launch(share=True)
