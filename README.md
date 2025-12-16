@@ -147,6 +147,23 @@ After submission, the system displays:
 - **Automated intake summary** for clinical review  
 
 Priority alerts are displayed **before** the machine learning recommendation to ensure urgent cases are surfaced immediately.
+### Department Recommendation
+
+The system returns:
+- **Predicted medical specialty**
+- **Confidence score (%)**
+
+#### Confidence Interpretation
+
+- **High Confidence (>70%)**  
+  Strong recommendation for this department
+
+- **Moderate Confidence (40–70%)**  
+  Likely department, consider secondary options
+
+- **Low Confidence (<40%)**  
+  Uncertain prediction — route to general medicine or manual triage
+
 
 ---
 
@@ -177,27 +194,6 @@ An **Urgent Priority Alert** is triggered for concerning but less immediately li
 - Severe or worsening pain
 
 Level 2 cases are recommended for **expedited clinical review**.
-
----
-
-## Understanding the Output
-
-### Department Recommendation
-
-The system returns:
-- **Predicted medical specialty**
-- **Confidence score (%)**
-
-#### Confidence Interpretation
-
-- **High Confidence (>70%)**  
-  Strong recommendation for this department
-
-- **Moderate Confidence (40–70%)**  
-  Likely department, consider secondary options
-
-- **Low Confidence (<40%)**  
-  Uncertain prediction — route to general medicine or manual triage
 
 ---
 
